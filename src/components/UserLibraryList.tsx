@@ -6,14 +6,17 @@ import SidebarSpinner from "./Spinner/SidebarSpinner/SidebarSpinner";
 import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "../hooks/useMediaQueries";
+import setActivePath from "../hooks/setActivePath";
 
 const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
+  const user = useSelector((state: RootState) => state.user.user);
   const activeTrack = useSelector(
     (state: RootState) => state.playback.activeTrack
   );
-  const { spotifyApi, user } = useSpotify();
+  const { spotifyApi } = useSpotify();
   const pathname = window.location.pathname === "/spotify-web/user-library"; // boolean
   const isDesktop = useMediaQuery("1024px");
+  setActivePath(!isDesktop ? "library" : null);
 
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ["user libraryList"],
