@@ -16,7 +16,7 @@ const AlbumCard = ({
 
   const sortImgByHeight = [
     ...albumData.images,
-    { url: "/spotify-web/icons/artist-no-image.svg" },
+    { url: "/spotify-web/icons/no-image.svg" },
   ].sort((a: any, b: any) => a.height - b.height);
   const image = sortImgByHeight[sortImgByHeight.length > 2 ? 1 : 0].url;
 
