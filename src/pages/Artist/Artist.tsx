@@ -1,4 +1,3 @@
-import { PauseIcon, PlayIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -16,13 +15,11 @@ import AlbumCard from "../../components/AlbumCard";
 import ArtistCard from "../../components/ArtistCard";
 import GoBackArrow from "../../components/GoBackArrow";
 import PlaylistCard from "../../components/PlaylistCard";
-import SettingsComponent from "../../components/SettingsComponent";
 import MusicBars from "../../components/Spinner/MusicBars/MusicBars";
 import Spinner from "../../components/Spinner/Spinner";
 import TracksCard, { trackUris } from "../../components/TracksCard";
 import useComponentIsMounted from "../../hooks/useIsMounted";
 import { musicStateForGreenPlayButton } from "../../modules/musicState";
-import { dataTagSymbol } from "@tanstack/react-query";
 
 export type ShowMoreType = {
   albums: boolean;
@@ -88,7 +85,6 @@ const Artist = () => {
   if (isSuccess)
     return (
       <>
-        {/* TODO - put fixed so the arrow is scrolling with the content and put bg-color when user scrolling. */}
         <div
           id={isDesktop ? "bg-color" : undefined}
           className={`absolute inset-0 lg:h-[475px]`}
@@ -151,7 +147,6 @@ const Artist = () => {
                   <p className="border border-[#888888] p-[6px] h-fit text-xs rounded lg:rounded-2xl lg:px-3 lg:py-2">
                     Follow
                   </p>
-                  <SettingsComponent />
                 </div>
 
                 <div className="flex items-center gap-3 lg:flex-row-reverse lg:gap-5 lg:mt-2">
@@ -225,24 +220,6 @@ const Artist = () => {
                           <p className="text-sm">{index + 1}</p>
                         </div>
                       )}
-                      <PauseIcon
-                        className={`hidden text-white size-6
-                        ${
-                          activeTrack === track.uri && !paused
-                            ? "lg:group-hover:block"
-                            : "group-hover:hidden"
-                        }
-                        ${activeTrack === track.uri && paused && "hidden"}`}
-                        onClick={() => spotifyApi.pause()}
-                      />
-                      <PlayIcon
-                        className={`text-white size-6 hidden
-                        ${
-                          (activeTrack !== track.uri || paused) &&
-                          "lg:group-hover:block"
-                        }`}
-                        onClick={() => spotifyApi.play()}
-                      />
                       <div className="flex-1">
                         <TracksCard
                           card={track}
