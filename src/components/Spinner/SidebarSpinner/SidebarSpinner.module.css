@@ -1,5 +1,7 @@
-.loader, .loader:before, .loader:after {
-  margin-inline: auto; 
+.loader,
+.loader:before,
+.loader:after {
+  margin-inline: auto;
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
@@ -7,7 +9,7 @@
   animation: bblFadInOut 1.8s infinite ease-in-out;
 }
 .loader {
-  color: #1ed760;
+  color: white;
   font-size: 7px;
   position: relative;
   text-indent: -9999em;
@@ -16,7 +18,7 @@
 }
 .loader:before,
 .loader:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
 }
@@ -29,7 +31,12 @@
 }
 
 @keyframes bblFadInOut {
-  0%, 80%, 100% { box-shadow: 0 1rem 0 -2.3em }
-  40% { box-shadow: 0 1rem 0 0 }
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 1rem 0 -2.3em;
+  }
+  40% {
+    box-shadow: 0 1rem 0 0;
+  }
 }
-    
