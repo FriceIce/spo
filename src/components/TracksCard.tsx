@@ -50,23 +50,23 @@ const TracksCard = ({
          ? "p-1 lg:p-3 lg:hover:bg-[#31313181]"
          : pathnameIsArtist && "lg:px-3 py-2"
      }`}
-      onClick={() =>
-        musicStateForTrack({
-          track,
-          arrayOfTracks,
-          index,
-          spotifyApi,
-          dispatch,
-          trackUris,
-          paused,
-          activeTrack,
-        })
-      }
     >
       <div
         className={`flex ${
           homepage ? "flex-col" : "flex-row"
         } gap-2 h-fit w-[100%]`}
+        onClick={() =>
+          musicStateForTrack({
+            track,
+            arrayOfTracks,
+            index,
+            spotifyApi,
+            dispatch,
+            trackUris,
+            paused,
+            activeTrack,
+          })
+        }
       >
         {
           <div className="relative">
@@ -139,7 +139,9 @@ const TracksCard = ({
       </div>
 
       <div className={`sm:hidden ${homepage && "hidden"}`}>
-        <SettingsComponent />
+        <SettingsComponent
+          external_source_to_spotify={track.external_urls.spotify}
+        />
       </div>
       {!homepage && (
         <div className="hidden lg:block">
