@@ -60,7 +60,11 @@ const Home = () => {
   if (isSuccess && showMore === null)
     return (
       <div className="mt-2 space-y-8 lg:space-y-14 pb-[30px] lg:pb-[20px] overflow-hidden no-scrollbar">
-        <section className="flex-1 text-white space-y-2 max-w-[2200px]">
+        <section
+          className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+            featuredPlaylists.length === 0 && "hidden"
+          }`}
+        >
           <div className="flex justify-between">
             <h1 className="text-lg lg:text-2xl font-bold pl-4">
               Music to keep an eye on
@@ -97,7 +101,11 @@ const Home = () => {
           </ul>
         </section>
 
-        <section className="flex-1 text-white space-y-2 max-w-[2200px]">
+        <section
+          className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+            newReleases.length === 0 && "hidden"
+          }`}
+        >
           <div className="flex justify-between">
             <h1 className="text-lg lg:text-2xl font-bold pl-4">New releases</h1>
 
@@ -132,7 +140,11 @@ const Home = () => {
           </ul>
         </section>
 
-        <section className="flex-1 text-white space-y-2 max-w-[2200px]">
+        <section
+          className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+            recommendations.length === 0 && "hidden"
+          }`}
+        >
           <div className="flex justify-between">
             <h1 className="text-lg lg:text-2xl font-bold px-4">
               Recommendations
@@ -174,7 +186,11 @@ const Home = () => {
           </ul>
         </section>
 
-        <section className="flex-1 text-white space-y-2 max-w-[2200px]">
+        <section
+          className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+            topArtists.length === 0 && "hidden"
+          }`}
+        >
           <div className="flex justify-between">
             <h1 className="text-lg lg:text-2xl font-bold px-4">
               Your top artists
@@ -210,7 +226,11 @@ const Home = () => {
           </ul>
         </section>
 
-        <section className="flex-1 text-white space-y-2 max-w-[2200px]">
+        <section
+          className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+            recentlyPlayed.length === 0 && "hidden"
+          }`}
+        >
           <div className="flex justify-between">
             <h1 className="text-lg lg:text-2xl font-bold px-4">
               Recently played tracks
