@@ -94,6 +94,7 @@ export type SearchTracks = {
   name: string;
   duration_ms: number;
   explixit: boolean;
+  external_urls: { spotify: string };
   artists: { id: string; uri: string; name: string }[];
   album: { images: Images[] };
 };
