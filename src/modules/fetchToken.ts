@@ -11,6 +11,7 @@ export const authHeader: string = encodeBase64(`${client_id}:${client_secret}`);
 
 export const fetchToken = async (query: string, setCookies: any) => {
   const hostname = window.location.hostname;
+  const mobileHosting = hostname.includes("192"); // Incase this application is running on a mobile device locally
   const response = await axios.post(
     `https://accounts.spotify.com/api/token`,
     query,
@@ -29,12 +30,12 @@ export const fetchToken = async (query: string, setCookies: any) => {
     setCookies("refresh_token", data.refresh_token, {
       path: "/spotify-web/",
       domain: hostname,
-      secure: true,
+      secure: mobileHosting ? false : true,
     });
 
     setCookies("access_token", data.access_token, {
       path: "/spotify-web/",
-      secure: true,
+      secure: mobileHosting ? false : true,
       domain: hostname,
       expires: new Date(Date.now() + 3300000), // 55min
     });
