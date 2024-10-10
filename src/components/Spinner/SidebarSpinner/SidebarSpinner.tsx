@@ -1,11 +1,7 @@
-import style from './SidebarSinner.module.css'
+import style from "./SidebarSpinner.module.css";
 
 const SidebarSpinner = () => {
-  return (
-    <div className={style.loader}>
-      
-    </div>
-  )
-}
+  return <div className={style.loader}></div>;
+};
 
-export default SidebarSpinner
+export default SidebarSpinner;
