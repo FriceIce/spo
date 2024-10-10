@@ -68,7 +68,6 @@ function App() {
             className="relative bg-spotify_black flex-1 overflow-y-auto overflow-x-hidden no-scrollbar"
             id="wrapper"
           >
-            <Header />
             <Routes>
               <Route path="/spotify-web/" element={<Home />} />
               <Route path="/spotify-web/album/:id" element={<Album />} />
