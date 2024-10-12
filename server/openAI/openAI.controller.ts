@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { getGenresForPrompt } from "../modules/getGenresForPrompt";
+import spotifyRecommendations from "../modules/spotifyAPI";
 
 /** 
   @description - fetch the genres with the help from openAI
@@ -11,8 +12,9 @@ export const getGenres = async (
   res: Response,
   next: NextFunction
 ) => {
-  const prompt: string = req.body.prompt;
-  console.log(prompt);
+  const { prompt, access_token }: { prompt: string; access_token: string } =
+    req.body;
+  console.log(prompt, access_token);
 
   try {
     const chatResponse = await getGenresForPrompt(prompt);
@@ -22,7 +24,8 @@ export const getGenres = async (
     }
 
     req.body = {
-      prompt: prompt,
+      prompt,
+      access_token,
       explation: chatResponse.explanation,
       genres: chatResponse.genres,
     };
@@ -39,16 +42,32 @@ export const getGenres = async (
 */
 
 export const getRecommendations = async (req: Request, res: Response) => {
-  const { explation, genres, prompt } = req.body;
+  const { explation, genres, prompt, access_token } = req.body;
 
-  res.status(200).json({
-    status: "Success",
-    data: {
-      prompt: prompt,
-      response: {
-        explation,
-        genres,
+  try {
+    const recommendedTracks = await spotifyRecommendations(
+      access_token,
+      genres
+    );
+
+    if (recommendedTracks?.message !== "successful")
+      return res.status(500).json({
+        status: "unsuccessful",
+        message: recommendedTracks?.message,
+      });
+
+    res.status(200).json({
+      status: "Success",
+      data: {
+        prompt: prompt,
+        response: {
+          explation,
+          genres,
+          recommendedTracks,
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    res.status(500).json({ status: "unsuccessful", message: "server error" });
+  }
 };
