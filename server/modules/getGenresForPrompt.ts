@@ -13,7 +13,7 @@ export const getGenresForPrompt = async (prompt: string) => {
         {
           role: "system",
           content:
-            "You are an AI that helps users select music genres. Your task is to give a short explanation followed by a list of five relevant genres. Do not include numbers, commas, or any extra text in the genre list—just separate each genre with a line break.",
+            "You are an AI that helps users select music genres. Your task is to give a short explanation followed by a list of five relevant genres. Do not include numbers, commas, or any extra text in the genre list—just separate each genre with a line break!",
         },
         {
           role: "user",

@@ -20,6 +20,7 @@
     "tsx": "^4.19.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.0",
+    "@types/spotify-web-api-node": "^5.0.11"
   }
 }
