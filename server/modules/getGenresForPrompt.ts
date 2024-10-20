@@ -17,7 +17,7 @@ export const getGenresForPrompt = async (prompt: string) => {
         },
         {
           role: "user",
-          content: `Here is a list of genres: {your genres list}. Based on the following prompt, provide five relevant genres at the end: "${prompt}". Provide a brief explanation first, and then list the genres, each on a new line with no additional characters.`,
+          content: `Here is a list of genres: ${genresSeeds} Based on the following prompt, provide five relevant genres at the end: "${prompt}". Provide a brief explanation first, and then list the genres, each on a new line with no additional characters.`,
         },
       ],
       model: "gpt-3.5-turbo",
