@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Playlist } from "../definition";
 import { useMediaQuery } from "../hooks/useMediaQueries";
 import useNav from "../hooks/useNav";
+import { RootState } from "../redux/store";
 import MusicButtonAnimation from "./Spinner/MusikButtonAnimation/MusikButtonAnimation";
 
 const PlaylistCard = ({
@@ -14,6 +16,7 @@ const PlaylistCard = ({
   sidemenu?: boolean;
   openSidebar?: boolean;
 }) => {
+  const guest = useSelector((state: RootState) => state.user.guest);
   const pathnameIsArtist = window.location.pathname.includes("artist");
   const pathnameIsLibrary =
     window.location.pathname === "/spotify-web/user-library"; // boolean - This used for images radius
@@ -60,7 +63,7 @@ const PlaylistCard = ({
             alt=""
             className={`${
               homepage || (pathnameIsArtist && !sidemenu)
-                ? "size-[140px]"
+                ? `${guest ? "size-full" : "size-[140px]"}`
                 : pathnameIsLibrary && !isDesktop
                 ? "min-w-[100px] max-w-[100px]"
                 : sidemenu
@@ -80,7 +83,7 @@ const PlaylistCard = ({
         >
           <p
             className={`text-white w-full truncate font-semibold text-sm lg:text-wrap lg:line-clamp-2
-            ${homepage && "line-clamp-2"} ${
+            ${homepage && "line-clamp-2 text-wrap"} ${
               pathnameIsArtist && "text-center line-clamp-2"
             }`}
           >

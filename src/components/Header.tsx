@@ -9,7 +9,7 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-spotify_black sticky inset-0 z-20 w-full h-[65px] lg:h-auto lg:p-6 rounded-t flex 
+      className={`bg-spotify_black sticky inset-0 z-20 w-full p-4 lg:h-auto lg:p-6 rounded-t flex 
       ${
         desktop ? "justify-between" : "flex-row-reverse justify-end gap-2"
       } items-center px-6`}
@@ -30,9 +30,7 @@ const Header = () => {
           </a>
         )}
 
-        <div
-          className={`size-7 lg:size-8 bg-black rounded-full cursor-not-allowed`}
-        >
+        <div className={`rounded-full cursor-not-allowed`}>
           <img
             src={
               user?.images

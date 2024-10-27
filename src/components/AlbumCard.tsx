@@ -52,7 +52,7 @@ const AlbumCard = ({
                 ? "size-[100px] max-w-[100px]"
                 : "size-14 lg:size-full"
             } 
-            rounded-[1.5px] lg:rounded-[4px]`}
+            rounded-[1px] lg:rounded-[4px]`}
           />
         </div>
 
