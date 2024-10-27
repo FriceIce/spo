@@ -32,12 +32,13 @@ export const fetchToken = async (query: string, setCookies: any) => {
       domain: hostname,
       secure: mobileHosting ? false : true,
     });
-
-    setCookies("access_token", data.access_token, {
-      path: "/spotify-web/",
-      secure: mobileHosting ? false : true,
-      domain: hostname,
-      expires: new Date(Date.now() + 3300000), // 55min
-    });
   }
+
+  // The access token should be set even if the refresh token is null or undefined.
+  setCookies("access_token", data.access_token, {
+    path: "/spotify-web/",
+    secure: mobileHosting ? false : true,
+    domain: hostname,
+    expires: new Date(Date.now() + 3300000), // 55min
+  });
 };

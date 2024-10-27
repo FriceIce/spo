@@ -14,6 +14,7 @@ import setActivePath from "../../hooks/setActivePath";
 import Header from "../../components/Header";
 
 const Home = () => {
+  const { guest } = useSelector((state: RootState) => state.user);
   const topArtists = useSelector((state: RootState) => state.home.topArtists);
   const [showMoreTitle, setShowMoreTitle] = useState<string>("");
   const [showMore, setShowMore] = useState<
@@ -31,7 +32,10 @@ const Home = () => {
     isSuccess,
   } = useFetchHome();
 
-  if (isLoading) return <Spinner />;
+  // The reason for including featuredPlaylist and newReleases in the if condition is that, when the user is signed in as a Guest, these are the only two variables that are not undefined.
+  if (isLoading && guest && !featuredPlaylists && !newReleases)
+    return <Spinner />;
+  if (isLoading && !guest) return <Spinner />; // This will run only when the user is signed in with Spotify.
 
   if (showMore && isDesktop)
     return (
@@ -58,7 +62,7 @@ const Home = () => {
     setShowMoreTitle(title);
   };
 
-  if (isSuccess && showMore === null)
+  if (isSuccess && featuredPlaylists && newReleases && showMore === null)
     return (
       <>
         <Header />
@@ -69,30 +73,42 @@ const Home = () => {
             }`}
           >
             <div className="flex justify-between">
-              <h1 className="text-lg lg:text-2xl font-bold pl-4">
+              <h1
+                className={`${
+                  guest ? "text-xl" : "text-lg"
+                } lg:text-2xl font-bold pl-4`}
+              >
                 Music to keep an eye on
               </h1>
 
-              <button
-                className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                onClick={() => showMoreFunc("playlist", "Featured playlists")}
-              >
-                Show more
-              </button>
+              {!guest && (
+                <button
+                  className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                  onClick={() => showMoreFunc("playlist", "Featured playlists")}
+                >
+                  Show more
+                </button>
+              )}
             </div>
 
             <ul
               className={`${
-                isDesktop ? "slider-grid" : "flex overflow-auto no-scrollbar"
+                isDesktop && !guest
+                  ? "slider-grid"
+                  : guest
+                  ? "card-layout"
+                  : "flex overflow-auto no-scrollbar"
               }`}
             >
               {featuredPlaylists.map((playlist, index) => {
                 return (
                   <li
                     key={playlist.id}
-                    className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none
+                    className={`flex-none ${
+                      guest && !isDesktop ? "w-full p-1" : "max-w-[150px]"
+                    } lg:max-h-none lg:max-w-none
                   ${
-                    index === 0
+                    index === 0 && !guest
                       ? "ml-2"
                       : index === featuredPlaylists.length - 1 && "mr-2"
                   }`}
@@ -110,32 +126,44 @@ const Home = () => {
             }`}
           >
             <div className="flex justify-between">
-              <h1 className="text-lg lg:text-2xl font-bold pl-4">
+              <h1
+                className={`${
+                  guest ? "text-xl" : "text-lg"
+                } lg:text-2xl font-bold pl-4`}
+              >
                 New releases
               </h1>
 
-              <button
-                className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                onClick={() => showMoreFunc("album", "New releases")}
-              >
-                Show more
-              </button>
+              {!guest && (
+                <button
+                  className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                  onClick={() => showMoreFunc("album", "New releases")}
+                >
+                  Show more
+                </button>
+              )}
             </div>
 
             <ul
               className={`${
-                isDesktop ? "slider-grid" : "flex overflow-auto no-scrollbar"
+                isDesktop && !guest
+                  ? "slider-grid"
+                  : guest
+                  ? "card-layout"
+                  : "flex overflow-auto no-scrollbar"
               }`}
             >
               {newReleases.map((album, index) => {
                 return (
                   <li
-                    key={index}
-                    className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none
+                    key={album.id}
+                    className={`flex-none ${
+                      guest && !isDesktop ? "w-full p-1" : "max-w-[150px]"
+                    } lg:max-h-none lg:max-w-none
                   ${
-                    index === 0
+                    index === 0 && !guest
                       ? "ml-2"
-                      : index === newReleases.length - 1 && "mr-2"
+                      : index === featuredPlaylists.length - 1 && "mr-2"
                   }`}
                   >
                     <AlbumCard albumData={album} isHomepage />
@@ -145,139 +173,149 @@ const Home = () => {
             </ul>
           </section>
 
-          <section
-            className={`flex-1 text-white space-y-2 max-w-[2200px] ${
-              recommendations.length === 0 && "hidden"
-            }`}
-          >
-            <div className="flex justify-between">
-              <h1 className="text-lg lg:text-2xl font-bold px-4">
-                Recommendations
-              </h1>
-
-              <button
-                className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                onClick={() =>
-                  showMoreFunc("recommendations", "Recommendations")
-                }
+          {!guest && (
+            <>
+              <section
+                className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+                  recommendations.length === 0 && "hidden"
+                }`}
               >
-                Show more
-              </button>
-            </div>
+                <div className="flex justify-between">
+                  <h1 className="text-lg lg:text-2xl font-bold px-4">
+                    Recommendations
+                  </h1>
 
-            <ul
-              className={`${
-                isDesktop ? "slider-grid" : "flex overflow-auto no-scrollbar"
-              }`}
-            >
-              {recommendations.map((track, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none 
+                  <button
+                    className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                    onClick={() =>
+                      showMoreFunc("recommendations", "Recommendations")
+                    }
+                  >
+                    Show more
+                  </button>
+                </div>
+
+                <ul
+                  className={`${
+                    isDesktop
+                      ? "slider-grid"
+                      : "flex overflow-auto no-scrollbar"
+                  }`}
+                >
+                  {recommendations.map((track, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none 
                   ${
                     index === 0
                       ? "ml-2"
                       : index === recommendations.length - 1 && "mr-2"
                   }`}
-                  >
-                    <TracksCard
-                      card={track}
-                      homepage
-                      arrayOfTracks={recommendations}
-                      index={index}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+                      >
+                        <TracksCard
+                          card={track}
+                          homepage
+                          arrayOfTracks={recommendations}
+                          index={index}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
 
-          <section
-            className={`flex-1 text-white space-y-2 max-w-[2200px] ${
-              topArtists.length === 0 && "hidden"
-            }`}
-          >
-            <div className="flex justify-between">
-              <h1 className="text-lg lg:text-2xl font-bold px-4">
-                Your top artists
-              </h1>
-
-              <button
-                className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                onClick={() => showMoreFunc("artist", "Your top artists")}
+              <section
+                className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+                  topArtists.length === 0 && "hidden"
+                }`}
               >
-                Show more
-              </button>
-            </div>
+                <div className="flex justify-between">
+                  <h1 className="text-lg lg:text-2xl font-bold px-4">
+                    Your top artists
+                  </h1>
 
-            <ul
-              className={`${
-                isDesktop
-                  ? "slider-grid"
-                  : "flex overflow-auto no-scrollbar gap-2"
-              }`}
-            >
-              {topArtists.map((track, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`flex-none ${
-                      index === 0 && "ml-2 lg:ml-0"
-                    } lg:max-h-none lg:max-w-none`}
+                  <button
+                    className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                    onClick={() => showMoreFunc("artist", "Your top artists")}
                   >
-                    <ArtistCard card={track as Artist} homepage />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+                    Show more
+                  </button>
+                </div>
 
-          <section
-            className={`flex-1 text-white space-y-2 max-w-[2200px] ${
-              recentlyPlayed.length === 0 && "hidden"
-            }`}
-          >
-            <div className="flex justify-between">
-              <h1 className="text-lg lg:text-2xl font-bold px-4">
-                Recently played tracks
-              </h1>
+                <ul
+                  className={`${
+                    isDesktop
+                      ? "slider-grid"
+                      : "flex overflow-auto no-scrollbar gap-2"
+                  }`}
+                >
+                  {topArtists.map((track, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className={`flex-none ${
+                          index === 0 && "ml-2 lg:ml-0"
+                        } lg:max-h-none lg:max-w-none`}
+                      >
+                        <ArtistCard card={track as Artist} homepage />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
 
-              <button
-                className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                onClick={() => showMoreFunc("track", "Recently played tracks")}
+              <section
+                className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+                  recentlyPlayed.length === 0 && "hidden"
+                }`}
               >
-                Show more
-              </button>
-            </div>
+                <div className="flex justify-between">
+                  <h1 className="text-lg lg:text-2xl font-bold px-4">
+                    Recently played tracks
+                  </h1>
 
-            <ul
-              className={`${
-                isDesktop ? "slider-grid" : "flex overflow-auto no-scrollbar"
-              }`}
-            >
-              {recentlyPlayed.map((track, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none
+                  <button
+                    className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                    onClick={() =>
+                      showMoreFunc("track", "Recently played tracks")
+                    }
+                  >
+                    Show more
+                  </button>
+                </div>
+
+                <ul
+                  className={`${
+                    isDesktop
+                      ? "slider-grid"
+                      : "flex overflow-auto no-scrollbar"
+                  }`}
+                >
+                  {recentlyPlayed.map((track, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none
                   ${
                     index === 0
                       ? "ml-2"
                       : index === recentlyPlayed.length - 1 && "mr-2"
                   }`}
-                  >
-                    <TracksCard
-                      card={track}
-                      homepage
-                      arrayOfTracks={recentlyPlayed}
-                      index={index}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+                      >
+                        <TracksCard
+                          card={track}
+                          homepage
+                          arrayOfTracks={recentlyPlayed}
+                          index={index}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            </>
+          )}
         </div>
       </>
     );

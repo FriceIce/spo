@@ -136,3 +136,10 @@ export type ShowMoreContentProp = {
   elementIDs: elementIDs;
   setShowMore: Dispatch<React.SetStateAction<ShowMoreType>>;
 };
+
+// user credentials for Spotify Web API used to define the guest response object
+export type UserCredential = {
+  access_token: string;
+  expires: string;
+  token_type: string;
+};
