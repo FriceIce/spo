@@ -109,7 +109,7 @@ function App() {
           </BrowserRouter>
         </main>
 
-        {!guest && !isDesktop && (
+        {!guest && (
           <div
             className={`${
               activeTrack || isDesktop ? "block" : "hidden"
