@@ -84,7 +84,7 @@ const Modal = ({
         ) : (
           <>
             <p className="leading-relaxed">
-              You're currently using a the guest version of this application,
+              You're currently using the guest version of this application,
               which provides limited access to features. To enjoy the full
               experience, please log in with your account.
             </p>
