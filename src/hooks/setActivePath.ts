@@ -7,7 +7,7 @@ const setActivePath = (path: null | "search" | "home" | "library") => {
   const dispatch = useDispatch();
 
   useComponentIsMounted(() => {
-    //path will only be null when used in UserLibraryList component and the viewport is larger than 1024px.
+    //path will only be null when used in UserLibraryList component and it is the first render.
     if (path === null) return;
 
     if (active_path !== path) {

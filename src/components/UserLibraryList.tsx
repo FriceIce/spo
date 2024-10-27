@@ -7,8 +7,11 @@ import { RootState } from "../redux/store";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "../hooks/useMediaQueries";
 import setActivePath from "../hooks/setActivePath";
+import { useEffect, useRef } from "react";
 
 const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
+  const isFirstRender = useRef<boolean>(true);
+
   const user = useSelector((state: RootState) => state.user.user);
   const activeTrack = useSelector(
     (state: RootState) => state.playback.activeTrack
@@ -16,7 +19,14 @@ const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
   const { spotifyApi } = useSpotify();
   const pathname = window.location.pathname === "/spotify-web/user-library"; // boolean
   const isDesktop = useMediaQuery("1024px");
-  setActivePath(!isDesktop ? "library" : null);
+  setActivePath(isFirstRender ? null : "library");
+
+  useEffect(() => {
+    if (isFirstRender) {
+      isFirstRender.current = false;
+      return;
+    }
+  }, []);
 
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ["user libraryList"],
