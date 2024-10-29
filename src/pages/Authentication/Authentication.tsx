@@ -15,7 +15,6 @@ const device_hostname = window.location.hostname;
 const Authentication = () => {
   const [showModal, setShowModal] = useState(true);
   const [_, setCookies] = useCookies(["access_token_guest", "refresh_token"]);
-  // const guest = useSelector((state: RootState) => state.user.guest);
 
   const dispatch = useDispatch();
   const current_user_device =
@@ -47,17 +46,17 @@ const Authentication = () => {
     const data = (await response.json()) as UserCredential;
 
     if (data.access_token) {
+      const protocol = window.location.protocol;
       setCookies("access_token_guest", data.access_token, {
         path: "/spotify-web/",
         domain: hostname,
+        secure: protocol === "https:" ? true : false,
         expires: new Date(Date.now() + 3600000), // 55min
       });
 
       dispatch({ type: "user/setGuest", payload: true });
       return;
     }
-    console.log(data);
-    // .then(() => (window.location.href = `${origin}/spotify-web/`));
   };
 
   return (

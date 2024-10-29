@@ -9,7 +9,6 @@ const RepeatButton = () => {
   const { spotifyApi } = useSpotify();
 
   useEffect(() => {
-    console.log(repeat);
     spotifyApi.setRepeat(repeat);
   }, [repeat]);
 
