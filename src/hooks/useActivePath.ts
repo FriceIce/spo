@@ -10,7 +10,7 @@ const useActivePath = (path: null | "search" | "home" | "library") => {
     if (path && active_path !== path) {
       dispatch({ type: "user/setActivePath", payload: path });
     }
-  }, [path, active_path]);
+  }, [path]);
 };
 
 export default useActivePath;
