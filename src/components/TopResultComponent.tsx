@@ -31,6 +31,7 @@ const TopResultComponent = ({
   nextPath,
   desktop,
 }: Prop) => {
+  const guest = useSelector((state: RootState) => state.user.guest);
   const { activeTrack } = useSelector((state: RootState) => state.playback);
   const dispatch = useDispatch();
 
@@ -94,6 +95,7 @@ const TopResultComponent = ({
                   key={track.id}
                   className="relative cursor-pointer"
                   onClick={() => {
+                    if (guest) return;
                     if (activeTrack !== track.uri)
                       dispatch({
                         type: "playback/setUri",

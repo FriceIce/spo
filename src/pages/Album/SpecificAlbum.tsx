@@ -23,6 +23,7 @@ import SaveContent from "../../components/SaveContent";
 const SpecificAlbum = () => {
   const [artistImg, setArtistImg] = useState<string>("");
   const [shuffle, setShuffle] = useState(false);
+  const guest = useSelector((state: RootState) => state.user.guest);
   const { activeTrack, paused, currentPageID } = useSelector(
     (state: RootState) => state.playback
   );
@@ -185,7 +186,10 @@ const SpecificAlbum = () => {
               <div className="flex items-center gap-3 lg:flex-row-reverse lg:gap-5">
                 <button
                   className="bg-transparent outline-none border-none cursor-pointer"
-                  onClick={() => setShuffle((prev) => !prev)}
+                  onClick={() => {
+                    if (guest) return;
+                    setShuffle((prev) => !prev);
+                  }}
                 >
                   <img
                     src={
@@ -200,6 +204,7 @@ const SpecificAlbum = () => {
                 <button
                   className="rounded-full bg-transparent border-none outline-none w-fit cursor-pointer"
                   onClick={() => {
+                    if (guest) return;
                     if (id === currentPageID && paused) spotifyApi.play();
                     if (id === currentPageID && !paused) spotifyApi.pause();
                     if (id !== currentPageID) {
@@ -242,6 +247,7 @@ const SpecificAlbum = () => {
                     <div
                       className="flex gap-3 items-center w-[90%]"
                       onClick={() => {
+                        if (guest) return;
                         if (activeTrack !== uri)
                           dispatch({
                             type: "playback/setUri",

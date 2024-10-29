@@ -23,6 +23,7 @@ import checkForImages from "../../modules/checkForImages";
 import followers from "../../modules/followerCount";
 
 const SpecificPlaylist = () => {
+  const guest = useSelector((state: RootState) => state.user.guest);
   const { activeTrack, paused, shuffle, currentPageID } = useSelector(
     (state: RootState) => state.playback
   );
@@ -197,6 +198,7 @@ const SpecificPlaylist = () => {
                 <button
                   className="bg-transparent outline-none border-none cursor-pointer"
                   onClick={() => {
+                    if (guest) return;
                     setShuffle((prev) => !prev);
                     dispatch({
                       type: "playback/setShuffle",
@@ -218,6 +220,7 @@ const SpecificPlaylist = () => {
                 <button
                   className="rounded-full bg-transparent border-none outline-none w-fit cursor-pointer"
                   onClick={() => {
+                    if (guest) return;
                     if (id === currentPageID && paused) spotifyApi.play();
                     if (id === currentPageID && !paused) spotifyApi.pause();
                     if (id !== currentPageID) {
@@ -270,6 +273,7 @@ const SpecificPlaylist = () => {
                     <div
                       className="flex gap-3 items-center w-[90%]"
                       onClick={() => {
+                        if (guest) return;
                         if (activeTrack !== uri)
                           dispatch({
                             type: "playback/setUri",

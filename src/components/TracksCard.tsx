@@ -28,6 +28,7 @@ const TracksCard = ({
   index: number;
   homepage?: boolean;
 }) => {
+  const guest = useSelector((state: RootState) => state.user.guest);
   const { activeTrack, paused } = useSelector(
     (state: RootState) => state.playback
   );
@@ -55,7 +56,8 @@ const TracksCard = ({
         className={`flex ${
           homepage ? "flex-col" : "flex-row"
         } gap-2 h-fit w-[100%]`}
-        onClick={() =>
+        onClick={() => {
+          if (guest) return;
           musicStateForTrack({
             track,
             arrayOfTracks,
@@ -65,8 +67,8 @@ const TracksCard = ({
             trackUris,
             paused,
             activeTrack,
-          })
-        }
+          });
+        }}
       >
         {
           <div className="relative">
@@ -75,7 +77,10 @@ const TracksCard = ({
                 className={`hidden lg:group-hover:${
                   homepage ? "hidden" : "group-hover:block"
                 } size-5 text-white absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]`}
-                onClick={() => spotifyApi.pause()}
+                onClick={() => {
+                  if (guest) return;
+                  spotifyApi.pause();
+                }}
               />
             )}
 
@@ -85,7 +90,10 @@ const TracksCard = ({
                 className={`hidden lg:group-hover:${
                   homepage ? "hidden" : "group-hover:block"
                 } size-5 text-white absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]`}
-                onClick={() => spotifyApi.play()}
+                onClick={() => {
+                  if (guest) return;
+                  spotifyApi.play();
+                }}
               />
             )}
 

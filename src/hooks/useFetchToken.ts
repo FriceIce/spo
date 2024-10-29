@@ -19,7 +19,7 @@ const useFetchMe = () => {
         },
       });
 
-      console.log(response.data);
+      // console.log(response.data);
       dispatch({ type: "user/setUser", payload: response.data });
     };
 
