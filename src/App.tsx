@@ -13,7 +13,6 @@ import Sidebar from "./components/Sidebar";
 import UserLibraryList from "./components/UserLibraryList";
 import useAuth from "./hooks/useAuth";
 import useFetchMe from "./hooks/useFetchToken";
-import useComponentIsMounted from "./hooks/useIsMounted";
 import { useMediaQuery } from "./hooks/useMediaQueries";
 import Album from "./pages/Album/SpecificAlbum";
 import Artist from "./pages/Artist/Artist";
@@ -39,16 +38,16 @@ function App() {
   useAuth();
   useFetchMe();
 
-  useComponentIsMounted(() => {
-    // checks for an access token linked to the guest user
+  useEffect(() => {
     if (cookie.access_token_guest) {
       dispatch({ type: "user/setGuest", payload: true });
     }
+    // checks for an access token linked to the guest user
     if (user && user.product !== "premium")
       alert(
         "You're not a Spotify Premium user, you won't be able to access the music player."
       );
-  }, [user, guest]);
+  }, [user]);
 
   const playbackExtraComponents = {
     rightButton: <RepeatButton />,
