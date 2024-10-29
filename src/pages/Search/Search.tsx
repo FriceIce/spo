@@ -16,7 +16,7 @@ import useSpotify from "../../hooks/useSpotify";
 import { AppDispatch, RootState } from "../../redux/store";
 import SpotifyWebApi from "spotify-web-api-js";
 import { SearchTracks } from "../../definition";
-import setActivePath from "../../hooks/setActivePath";
+import useActivePath from "../../hooks/useActivePath";
 
 const Search = () => {
   const [input, setInput] = useState<string>("");
@@ -28,7 +28,7 @@ const Search = () => {
     (state: RootState) => state.search
   );
   const dispatch = useDispatch();
-  setActivePath("search");
+  useActivePath("search");
 
   const isDesktop = useMediaQuery("1024px");
   const navigate = useNavigate();
@@ -349,7 +349,7 @@ const searchAll = async (
           );
 
         const sortedList = [...spotifyPlaylists, ...playlistWithoutSpotify];
-        console.log("Search Playlist", sortedList);
+        // console.log("Search Playlist", sortedList);
         return [...sortedList];
       },
       function (err) {
@@ -370,7 +370,7 @@ const searchAll = async (
               input.toLocaleLowerCase().trim()
           )
           .sort((a: any, b: any) => b.popularity - a.popularity)[0]; // This will be the top artist that spotify recommend.
-        console.log("Artists", artistList, topArtist);
+        // console.log("Artists", artistList, topArtist);
 
         const sortArtistByPopularity = artistList.sort(
           (a: any, b: any) => b.popularity - a.popularity
@@ -387,7 +387,7 @@ const searchAll = async (
     .searchTracks(input, { limit: desktop ? 15 : 5, market: "es" })
     .then(
       function (data) {
-        console.log("Search Tracks", input, data.tracks.items);
+        // console.log("Search Tracks", input, data.tracks.items);
         const albumNames: string[] = [];
         const albums = data.tracks.items
           .filter((track) => {
@@ -432,7 +432,7 @@ const searchAll = async (
       return popularityB - popularityA; // Sort in descending order, meaning albums at the bottom because they dont have popularity property.
     });
 
-  console.log(tracks.topResult);
+  // console.log(tracks.topResult);
 
   dispatch({ type: "search/topResult", payload: tracks.topResult[0] });
   dispatch({

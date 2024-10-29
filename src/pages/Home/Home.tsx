@@ -10,7 +10,7 @@ import { Artist } from "../../definition";
 import useFetchHome from "../../hooks/useFetchHome";
 import { useMediaQuery } from "../../hooks/useMediaQueries";
 import { RootState } from "../../redux/store";
-import setActivePath from "../../hooks/setActivePath";
+import useActivePath from "../../hooks/useActivePath";
 import Header from "../../components/Header";
 
 const Home = () => {
@@ -21,7 +21,7 @@ const Home = () => {
     null | "artist" | "track" | "playlist" | "album" | "recommendations"
   >(null);
   const isDesktop = useMediaQuery("1024px");
-  setActivePath("home");
+  useActivePath("home");
 
   const {
     recentlyPlayed,

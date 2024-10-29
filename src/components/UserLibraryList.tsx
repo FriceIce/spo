@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import { Playlist } from "../definition";
+import useActivePath from "../hooks/useActivePath";
+import { useMediaQuery } from "../hooks/useMediaQueries";
 import useSpotify from "../hooks/useSpotify";
+import { RootState } from "../redux/store";
 import PlaylistCard from "./PlaylistCard";
 import SidebarSpinner from "./Spinner/SidebarSpinner/SidebarSpinner";
-import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
-import { useMediaQuery } from "../hooks/useMediaQueries";
-import setActivePath from "../hooks/setActivePath";
-import { useEffect, useRef } from "react";
 
 const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
-  const isFirstRender = useRef<boolean>(true);
+  const guest = useSelector((state: RootState) => state.user.guest);
 
   const user = useSelector((state: RootState) => state.user.user);
   const activeTrack = useSelector(
@@ -19,14 +18,7 @@ const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
   const { spotifyApi } = useSpotify();
   const pathname = window.location.pathname === "/spotify-web/user-library"; // boolean
   const isDesktop = useMediaQuery("1024px");
-  setActivePath(isFirstRender ? null : "library");
-
-  useEffect(() => {
-    if (isFirstRender) {
-      isFirstRender.current = false;
-      return;
-    }
-  }, []);
+  useActivePath(isDesktop ? null : "library");
 
   const { data, isSuccess, isLoading } = useQuery({
     queryKey: ["user libraryList"],
@@ -35,6 +27,13 @@ const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
         return playlist.items as unknown as Playlist[];
       }),
   });
+
+  if (guest && !isDesktop)
+    return (
+      <h1 className="lg:text-3xl font-bold mt-10 mx-auto w-max">
+        This content is unavailable for guest users.
+      </h1>
+    );
 
   if (isLoading)
     return (
