@@ -1,19 +1,25 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from "react";
 
-const useComponentIsMounted = ( fn: () => void, deps:any[] = [] ) => {
-  const isMounted = useRef(false);
+const useComponentIsMounted = (
+  fn: () => void,
+  deps: React.DependencyList = []
+) => {
+  const hasMounted = useRef(false);
 
   useEffect(() => {
-    if(isMounted.current === false) {
-      isMounted.current = true;
-      return
-    } 
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return; // Ensures the initial render does not trigger fn
+    }
 
-    fn(); 
+    // Call the function
+    fn();
 
-  }, deps)
-  
-  
-}
+    // Optional cleanup function if needed
+    return () => {
+      hasMounted.current = false;
+    };
+  }, deps);
+};
 
-export default useComponentIsMounted
+export default useComponentIsMounted;
