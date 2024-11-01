@@ -35,7 +35,7 @@ const Modal = ({
     state((prev) => !prev);
   };
   return (
-    <section className="fixed inset-0 z-[2] h-dvh w-dvw backdrop-blur-[2px]">
+    <section className="fixed inset-0 z-[20] h-dvh w-dvw backdrop-blur-[2px]">
       <motion.div
         variants={modalVarient}
         initial="initial"
