@@ -44,7 +44,7 @@ const AlbumCard = ({
           <img
             src={image}
             alt="Album cover"
-            className={`rounded-lg object-cover object-center shadow
+            className={`object-cover object-center shadow
             ${
               isHomepage || (pathnameIsArtist && isDesktop)
                 ? "size-full"
@@ -52,7 +52,7 @@ const AlbumCard = ({
                 ? "size-[100px] max-w-[100px]"
                 : "size-14 lg:size-full"
             } 
-            rounded-[1px] lg:rounded-[4px]`}
+            rounded-[2px] lg:rounded-[4px]`}
           />
         </div>
 
