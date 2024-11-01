@@ -152,7 +152,7 @@ const TracksCard = ({
         />
       </div>
       {!homepage && (
-        <div className="hidden lg:block">
+        <div className="hidden lg:flex items-center">
           <ConvertToMilisec value={trackDuration} />
         </div>
       )}
