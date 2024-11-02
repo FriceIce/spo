@@ -65,12 +65,6 @@ When you sign in with your Spotify account, you’ll be welcomed to the home pag
 
 I'm using the npm package [spotify-web-api-js](https://www.npmjs.com/package/spotify-web-api-js) to communicate with Spotify's API. It simplifies the process, but I still recommend reading the Spotify Web API documentation for each endpoint that you wish use. Visit [Spotify Web API](https://developer.spotify.com/documentation/web-api) for more detailed information.
 
-First, download the npm package:
-
-```bash
-npm i spotify-web-api-js
-```
-
 Initiate the instance:
 
 ```javascript
