@@ -140,7 +140,7 @@ const Search = () => {
                 !isDesktop
                   ? "flex flex-col gap-4"
                   : active === 0
-                  ? "flex flex-col gap-4"
+                  ? "flex flex-col gap-1"
                   : "card-layout gap-y-4"
               } w-full`}
             >

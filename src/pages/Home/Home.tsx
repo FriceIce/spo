@@ -30,10 +30,13 @@ const Home = () => {
     recommendations,
     isLoading,
     isSuccess,
+    imageLoaded,
   } = useFetchHome();
 
+  console.log(imageLoaded);
+
   // The reason for including featuredPlaylist and newReleases in the if condition is that, when the user is signed in as a Guest, these are the only two variables that are not undefined.
-  if (isLoading && guest && !featuredPlaylists && !newReleases)
+  if (isLoading && !imageLoaded && guest && !featuredPlaylists && !newReleases)
     return <Spinner />;
   if (isLoading && !guest) return <Spinner />; // This will run only when the user is signed in with Spotify.
 
@@ -62,7 +65,13 @@ const Home = () => {
     setShowMoreTitle(title);
   };
 
-  if (isSuccess && featuredPlaylists && newReleases && showMore === null)
+  if (
+    isSuccess &&
+    imageLoaded &&
+    featuredPlaylists &&
+    newReleases &&
+    showMore === null
+  )
     return (
       <>
         <Header />
