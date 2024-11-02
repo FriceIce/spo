@@ -1,31 +1,18 @@
 import qs from "qs";
-import { useCookies } from "react-cookie";
-import { useDispatch } from "react-redux";
+import Modal from "../../components/Modal";
 import { UserCredential } from "../../definition";
 import { authHeader } from "../../modules/fetchToken";
-import Modal from "../../components/Modal";
-import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-
-const mobile_localhost = import.meta.env.VITE_AUTH_URL_MOBILE;
-const desktop_host = import.meta.env.VITE_AUTH_URL_HOSTING;
-const desktop_localhost = import.meta.env.VITE_AUTH_URL_DESKTOP;
-const device_hostname = window.location.hostname;
+import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 const Authentication = () => {
   const [showModal, setShowModal] = useState(true);
   const [_, setCookies] = useCookies(["access_token_guest", "refresh_token"]);
 
   const dispatch = useDispatch();
-  const current_user_device =
-    device_hostname === "localhost"
-      ? desktop_localhost
-      : device_hostname === "friceice.github.io"
-      ? desktop_host
-      : mobile_localhost;
-
-  const authentication_url = current_user_device as string;
-
+  const auth_url = authentication_url();
   const runFetchTokenFunction = async () => {
     const hostname = window.location.hostname;
     const query = qs.stringify({
@@ -81,7 +68,7 @@ const Authentication = () => {
 
           <div className="space-y-2 items-center flex-col flex justify-center">
             <a
-              href={authentication_url}
+              href={auth_url}
               className="bg-spotify_green text-black text-xs lg:text-base font-semibold px-6 py-[8px] lg:px-16 lg:py-[12px] rounded-full lg:hover:scale-105 transition-all"
             >
               <button className="">Log in with Spotify</button>
@@ -100,3 +87,9 @@ const Authentication = () => {
 };
 
 export default Authentication;
+
+// Authentication url for sign in with Spotify. It uses the en users origin to set the redirect_uri.
+const authentication_url = () => {
+  const client_id = import.meta.env.VITE_CLIENT_ID;
+  return `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${window.location.origin}/spotify-web/callback&scope=user-read-private user-read-email user-library-read user-follow-read playlist-read-private playlist-read-collaborative user-modify-playback-state streaming app-remote-control user-read-playback-state user-read-currently-playing ugc-image-upload user-library-modify user-read-recently-played user-top-read user-read-playback-position playlist-modify-private`;
+};
