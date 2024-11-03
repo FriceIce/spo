@@ -21,6 +21,7 @@ import Home from "./pages/Home/Home";
 import Playlist from "./pages/Playlist/specificPlaylist";
 import Search from "./pages/Search/Search";
 import { RootState } from "./redux/store";
+import { ParallaxProvider } from "react-scroll-parallax";
 
 //Spotify API
 function App() {
@@ -63,7 +64,7 @@ function App() {
     return <Authentication />;
 
   return (
-    <>
+    <ParallaxProvider>
       <AnimatePresence>
         {openModal && guest && <Modal type="guest" state={setOpenModal} />}
       </AnimatePresence>
@@ -148,7 +149,7 @@ function App() {
           </div>
         )}
       </div>
-    </>
+    </ParallaxProvider>
   );
 }
 
