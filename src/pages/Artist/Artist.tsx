@@ -109,7 +109,7 @@ const Artist = () => {
             {}
 
             <h1
-              className={`relative z-40 brightness-200 ml-4 lg:ml-0 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
+              className={`relative z-10 brightness-200 ml-4 lg:ml-0 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
             >
               <a
                 href={artist.external_urls.spotify}

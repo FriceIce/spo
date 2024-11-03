@@ -63,13 +63,7 @@ const Home = () => {
     setShowMoreTitle(title);
   };
 
-  if (
-    isSuccess &&
-    imageLoaded &&
-    featuredPlaylists &&
-    newReleases &&
-    showMore === null
-  )
+  if (isSuccess && featuredPlaylists && newReleases && showMore === null)
     return (
       <>
         <Header />
