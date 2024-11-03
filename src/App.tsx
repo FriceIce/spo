@@ -82,30 +82,25 @@ function App() {
               : "pb-[50px]"
           }`}
         >
-          <BrowserRouter>
-            <Sidebar />
-            <div
-              className="relative bg-spotify_black flex-1 overflow-y-auto overflow-x-hidden no-scrollbar"
-              id="wrapper"
-            >
-              <Routes>
-                <Route path="/spotify-web/" element={<Home />} />
-                <Route path="/spotify-web/album/:id" element={<Album />} />
+          <Sidebar />
+          <div
+            className="relative bg-spotify_black flex-1 overflow-y-auto overflow-x-hidden no-scrollbar"
+            id="wrapper"
+          >
+            <Routes>
+              <Route path="/spotify-web/" element={<Home />} />
+              <Route path="/spotify-web/album/:id" element={<Album />} />
+              <Route path="/spotify-web/playlist/:id" element={<Playlist />} />
+              <Route path="/spotify-web/artist/:id" element={<Artist />} />
+              <Route path="/spotify-web/search" element={<Search />} />
+              {!isDesktop && (
                 <Route
-                  path="/spotify-web/playlist/:id"
-                  element={<Playlist />}
+                  path="/spotify-web/user-library"
+                  element={<UserLibraryList openSidebar={false} />}
                 />
-                <Route path="/spotify-web/artist/:id" element={<Artist />} />
-                <Route path="/spotify-web/search" element={<Search />} />
-                {!isDesktop && (
-                  <Route
-                    path="/spotify-web/user-library"
-                    element={<UserLibraryList openSidebar={false} />}
-                  />
-                )}
-              </Routes>
-            </div>
-          </BrowserRouter>
+              )}
+            </Routes>
+          </div>
         </main>
 
         {!guest && (
