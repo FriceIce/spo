@@ -134,5 +134,6 @@ export const refreshToken = async (req: Request, res: Response) => {
     const status = err.response?.status || 500;
     const message =
       err.response?.statusText || err.message || "An error occurred";
+    return res.status(status).json({ message });
   }
 };

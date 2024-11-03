@@ -95,31 +95,21 @@ const Artist = () => {
         <div className="space-y-10 pb-4 max-w-[1500px] mx-auto">
           <div
             className={`relative h-[325px] sm:h-[625px] md:h-[725px] lg:h-[425px] flex items-end`}
-            style={{
-              backgroundImage: !isDesktop
-                ? `url(${checkForImages(artist.images)})`
-                : undefined,
-              backgroundAttachment: "fixed",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "100%",
-              aspectRatio: "auto",
-              boxShadow: !isDesktop
-                ? "inset 0 0 300px rgba(0, 0, 0, 0.5)"
-                : undefined,
-            }}
           >
-            {isDesktop && (
-              <img
-                id="artist-img"
-                crossOrigin="anonymous"
-                src={checkForImages(artist.images)}
-                alt=""
-                className="max-w-[250px] max-h-[250px] size-full object-center object-cover m-10 lg:mr-2 rounded-full shadow"
-              />
-            )}
+            <img
+              crossOrigin="anonymous"
+              src={checkForImages(artist.images)}
+              alt=""
+              className="absolute inset-0 w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mr-2 lg:rounded-full shadow"
+            />
+
+            {/* This div works as a filter for the artist image. */}
+            <div className="absolute inset-0 z-[10] bg-[#00000036] w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mr-2 lg:rounded-full" />
+
+            {}
 
             <h1
-              className={`brightness-200 ml-4 lg:ml-0 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
+              className={`relative z-40 brightness-200 ml-4 lg:ml-0 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
             >
               <a
                 href={artist.external_urls.spotify}
@@ -340,7 +330,6 @@ const Artist = () => {
   [2] Get Artist's Top Tracks  
   [3] Get artist's albums
   [4] Get artist related artists 
-
 */
 
 export default Artist;
