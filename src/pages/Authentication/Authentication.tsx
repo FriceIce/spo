@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import axios from "axios";
 
 const Authentication = () => {
   const [showModal, setShowModal] = useState(true);
@@ -13,24 +14,14 @@ const Authentication = () => {
 
   const dispatch = useDispatch();
   const auth_url = authentication_url();
+
   const runFetchTokenFunction = async () => {
     const hostname = window.location.hostname;
-    const query = qs.stringify({
-      grant_type: "client_credentials",
-    });
 
-    const response = await fetch(
-      `https://accounts.spotify.com/api/token?` + query,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Basic ${authHeader}`,
-        },
-      }
+    const response = await axios.post<UserCredential>(
+      "http://localhost:3001/api/guestLogin"
     );
-
-    const data = (await response.json()) as UserCredential;
+    const data = response.data;
 
     if (data.access_token) {
       const protocol = window.location.protocol;

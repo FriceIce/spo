@@ -1,39 +1,37 @@
-import { authHeader } from "./fetchToken";
+import axios from "axios";
 
 export const getRefreshToken = async (setCookies: any, cookie: any) => {
   // refresh token that has been previously stored
-  const refreshToken = cookie.refresh_token;
-  const url = "https://accounts.spotify.com/api/token";
+  const refreshToken: string | undefined = cookie.refresh_token;
 
   if (!refreshToken) {
     console.error("No refresh token found");
     return;
   }
+  console.log(refreshToken);
 
-  const payload = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${authHeader}`,
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: refreshToken,
-      client_id: import.meta.env.VITE_CLIENT_ID as string,
-    }),
-  };
+  const response = await axios.post("http://localhost:3001/api/refreshToken", {
+    refresh_token: refreshToken,
+  });
+  const data = response.data;
 
-  const body = await fetch(url, payload);
-  const response = await body.json();
-  console.log(response);
+  if (!data) {
+    return alert(
+      "Sorry, we were unable to continue your session. Please refresh the page and log in again."
+    );
+  }
 
-  setCookies("access_token", response.access_token, {
+  setCookies("access_token", data.access_token, {
     path: "/spotify-web/",
     domain: "localhost",
     expires: new Date(Date.now() + 3600000), // 1h
   });
 
-  if (response.refreshToken) {
-    localStorage.setItem("refresh_token", response.refreshToken);
+  if (data.refreshToken) {
+    setCookies("refresh_token", data.access_token, {
+      path: "/spotify-web/",
+      domain: "localhost",
+      expires: new Date(Date.now() + 3600000), // 1h
+    });
   }
 };
