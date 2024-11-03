@@ -10,9 +10,12 @@ export const getRefreshToken = async (setCookies: any, cookie: any) => {
   }
   console.log(refreshToken);
 
-  const response = await axios.post("http://localhost:3001/api/refreshToken", {
-    refresh_token: refreshToken,
-  });
+  const response = await axios.post(
+    "https://spotify-web-jrq3.onrender.com/api/refreshToken",
+    {
+      refresh_token: refreshToken,
+    }
+  );
   const data = response.data;
 
   if (!data) {

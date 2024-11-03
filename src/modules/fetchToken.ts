@@ -12,9 +12,12 @@ export const authHeader: string = encodeBase64(`${client_id}:${client_secret}`);
 export const fetchToken = async (query: string, setCookies: any) => {
   const hostname = window.location.hostname;
   const mobileHosting = hostname.includes("192"); // Incase this application is running on a mobile device locally
-  const response = await axios.post(`http://localhost:3001/api/login/`, {
-    query,
-  });
+  const response = await axios.post(
+    `https://spotify-web-jrq3.onrender.com/api/login/`,
+    {
+      query,
+    }
+  );
 
   const data = (await response.data) as SpotifyAuthResponse;
 

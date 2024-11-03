@@ -17,7 +17,7 @@ const Authentication = () => {
     const hostname = window.location.hostname;
 
     const response = await axios.post<UserCredential>(
-      "http://localhost:3001/api/guestLogin"
+      "https://spotify-web-jrq3.onrender.com/api/guestLogin"
     );
     const data = response.data;
 
@@ -30,6 +30,7 @@ const Authentication = () => {
         expires: new Date(Date.now() + 3600000), // 55min
       });
 
+      console.log("setting guest to true");
       dispatch({ type: "user/setGuest", payload: true });
       return;
     }
