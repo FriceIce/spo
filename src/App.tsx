@@ -1,5 +1,5 @@
 //React Router
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";

@@ -1,12 +1,10 @@
-import qs from "qs";
-import Modal from "../../components/Modal";
-import { UserCredential } from "../../definition";
-import { authHeader } from "../../modules/fetchToken";
+import axios from "axios";
 import { AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
-import axios from "axios";
+import Modal from "../../components/Modal";
+import { UserCredential } from "../../definition";
 
 const Authentication = () => {
   const [showModal, setShowModal] = useState(true);
