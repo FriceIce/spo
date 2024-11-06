@@ -33,8 +33,6 @@ const Home = () => {
     imageLoaded,
   } = useFetchHome();
 
-  console.log(imageLoaded);
-
   // The reason for including featuredPlaylist and newReleases in the if condition is that, when the user is signed in as a Guest, these are the only two variables that are not undefined.
   if (isLoading && !imageLoaded && guest && !featuredPlaylists && !newReleases)
     return <Spinner />;

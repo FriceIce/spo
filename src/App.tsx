@@ -35,7 +35,7 @@ function App() {
   const dispatch = useDispatch();
 
   const isDesktop = useMediaQuery("1024px");
-  useAuth();
+  const code = useAuth(); // output: boolean
   useFetchMe();
 
   useEffect(() => {
@@ -43,10 +43,11 @@ function App() {
       dispatch({ type: "user/setGuest", payload: true });
     }
     // checks for an access token linked to the guest user
-    if (user && user.product !== "premium")
+    if (user && user.product !== "premium") {
       alert(
         "You're not a Spotify Premium user, you won't be able to access the music player."
       );
+    }
   }, [user]);
 
   const playbackExtraComponents = {
@@ -59,7 +60,13 @@ function App() {
   }, [uris]);
   // useEffect(() => setAccessToken(cookie.access_token), [cookies.access_token])
 
-  if (!cookie.access_token && !cookie.access_token_guest && !user && !guest)
+  if (
+    !cookie.access_token &&
+    !cookie.access_token_guest &&
+    !user &&
+    !guest &&
+    !code
+  )
     return <Authentication />;
 
   return (
