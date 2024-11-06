@@ -100,7 +100,10 @@ const Artist = () => {
               crossOrigin="anonymous"
               src={checkForImages(artist.images)}
               alt=""
-              className="absolute inset-0 w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mr-2 lg:rounded-full shadow"
+              className="absolute inset-0 w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-cover lg:m-10 lg:mr-2 lg:rounded-full shadow"
+              style={{
+                objectPosition: "50% 10%",
+              }}
             />
 
             {/* This div works as a filter for the artist image. */}
