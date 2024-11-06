@@ -1,11 +1,25 @@
 import qs from "qs";
 import Modal from "../../components/Modal";
 import { UserCredential } from "../../definition";
-import { authHeader } from "../../modules/fetchToken";
 import { AnimatePresence } from "framer-motion";
 import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { PKCE_auth } from "../../modules/auth_PKCE";
+
+// checks for code in the browser URL
+const urlParams = new URLSearchParams(window.location.search);
+let code = urlParams.get("code");
+const codeChallenge = code ?? (await PKCE_auth());
+
+const client_id = import.meta.env.VITE_CLIENT_ID;
+const client_secret = import.meta.env.VITE_CLIENT_SECRET;
+
+function encodeBase64(str: string): string {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+export const authHeader: string = encodeBase64(`${client_id}:${client_secret}`);
 
 const Authentication = () => {
   const [showModal, setShowModal] = useState(true);
@@ -91,5 +105,5 @@ export default Authentication;
 // Authentication url for sign in with Spotify. It uses the en users origin to set the redirect_uri.
 const authentication_url = () => {
   const client_id = import.meta.env.VITE_CLIENT_ID;
-  return `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${window.location.origin}/spotify-web/callback&scope=user-read-private user-read-email user-library-read user-follow-read playlist-read-private playlist-read-collaborative user-modify-playback-state streaming app-remote-control user-read-playback-state user-read-currently-playing ugc-image-upload user-library-modify user-read-recently-played user-top-read user-read-playback-position playlist-modify-private`;
+  return `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${window.location.origin}/spotify-web/callback&scope=user-read-private user-read-email user-library-read user-follow-read playlist-read-private playlist-read-collaborative user-modify-playback-state streaming app-remote-control user-read-playback-state user-read-currently-playing ugc-image-upload user-library-modify user-read-recently-played user-top-read user-read-playback-position playlist-modify-private&code_challenge_method=S256&code_challenge=${codeChallenge}`;
 };
