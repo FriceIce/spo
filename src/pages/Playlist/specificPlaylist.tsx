@@ -258,13 +258,10 @@ const SpecificPlaylist = () => {
 
                 const uri: string = track.track.uri;
                 const imageList = track.track.album.images;
-                const albumCover =
-                  imageList.length > 1
-                    ? imageList[1].url
-                    : imageList.length === 1
-                    ? imageList[0]
-                    : "/spotify-web/icons/album-placeholder.svg";
-
+                const albumCover = checkForImages(
+                  imageList,
+                  "/spotify-web/icons/album-placeholder.svg"
+                );
                 return (
                   <li
                     key={track.track.id}
