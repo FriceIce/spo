@@ -100,16 +100,17 @@ const Artist = () => {
               crossOrigin="anonymous"
               src={checkForImages(artist.images)}
               alt=""
-              className="absolute inset-0 w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mr-2 lg:rounded-full shadow"
+              style={{ objectPosition: "50% 10%" }}
+              className="absolute inset-0 w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-cover lg:m-10 lg:mt-16 lg:mr-2 lg:rounded shadow"
             />
 
             {/* This div works as a filter for the artist image. */}
-            <div className="absolute inset-0 z-[10] bg-[#00000036] w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mr-2 lg:rounded-full" />
+            <div className="absolute inset-0 z-[10] bg-[#00000036] w-full h-full lg:max-w-[250px] lg:max-h-[250px] size-full object-center object-cover lg:m-10 lg:mt-16 lg:mr-2 lg:rounded" />
 
             {}
 
             <h1
-              className={`relative z-10 brightness-200 ml-4 lg:ml-0 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
+              className={`relative z-10 brightness-200 ml-4 lg:ml-10 lg:mb-10 m mb-2 text-5xl font-extrabold text-white cursor-pointer hover:underline`}
             >
               <a
                 href={artist.external_urls.spotify}
