@@ -35,7 +35,7 @@ function App() {
   const dispatch = useDispatch();
 
   const isDesktop = useMediaQuery("1024px");
-  useAuth();
+  const code = useAuth();
   useFetchMe();
 
   useEffect(() => {
@@ -59,7 +59,13 @@ function App() {
   }, [uris]);
   // useEffect(() => setAccessToken(cookie.access_token), [cookies.access_token])
 
-  if (!cookie.access_token && !cookie.access_token_guest && !user && !guest)
+  if (
+    !cookie.access_token &&
+    !cookie.access_token_guest &&
+    !user &&
+    !guest &&
+    !code
+  )
     return <Authentication />;
 
   return (

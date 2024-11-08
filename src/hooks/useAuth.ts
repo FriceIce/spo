@@ -8,11 +8,10 @@ const useAuth = () => {
   const [_, setCookies] = useCookies(["access_token", "refresh_token"]);
   const origin = window.location.origin;
   const navigate = useNavigate();
+  const param = new URL(window.location.href).searchParams;
+  const code = param.get("code")?.trim();
 
   useEffect(() => {
-    const param = new URL(window.location.href).searchParams;
-    const code = param.get("code")?.trim();
-
     // When the user sign in with Spotify for the first time this will run
     if (code) {
       fetchToken(
@@ -27,6 +26,8 @@ const useAuth = () => {
 
     return () => {};
   }, []);
+
+  return code;
 };
 
 export default useAuth;
