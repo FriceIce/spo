@@ -48,10 +48,14 @@ const PlaylistCard = ({
     >
       <div
         className={`flex gap-2 h-fit lg:items-start overflow-x-hidden
-        ${homepage || pathnameIsArtist ? "flex-col items-start" : "items-end"}
-        lg:${!sidemenu && "flex-col"} `}
+        ${
+          (homepage && !sidemenu) || (pathnameIsArtist && !sidemenu)
+            ? "flex-col"
+            : "items-start"
+        }
+        lg:${!sidemenu && "flex-col justify-start"} `}
       >
-        <div className="relative h-full">
+        <div className={`relative h-full ${!sidemenu && "lg:h-[200px]"}`}>
           {!sidemenu && isDesktop && <MusicButtonAnimation />}
 
           <img
@@ -84,7 +88,7 @@ const PlaylistCard = ({
           <p
             className={`text-white w-full truncate font-semibold text-sm lg:text-wrap lg:line-clamp-2
             ${homepage && "line-clamp-2 text-wrap"} ${
-              pathnameIsArtist && "text-center line-clamp-2"
+              pathnameIsArtist && "line-clamp-2"
             }`}
           >
             {playlistData.name}
@@ -93,7 +97,7 @@ const PlaylistCard = ({
           <div className="flex items-center gap-1">
             <p
               className={`capitalize text-xs text-spotify_gray truncate ${
-                pathnameIsArtist && "hidden"
+                pathnameIsArtist && !sidemenu && "hidden"
               }`}
             >
               {isDesktop

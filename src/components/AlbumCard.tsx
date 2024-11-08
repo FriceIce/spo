@@ -34,7 +34,7 @@ const AlbumCard = ({
     >
       <div
         className={`flex ${
-          !isHomepage && "items-center"
+          !isHomepage && "items-start"
         } gap-3 h-fit lg:flex-col 
         ${isHomepage && "flex-col"} sm:items-start w-full `}
       >
