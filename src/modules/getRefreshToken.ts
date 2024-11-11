@@ -1,4 +1,4 @@
-import { authHeader } from "./fetchToken";
+import { authHeader } from "../pages/Authentication/Authentication";
 
 export const getRefreshToken = async (setCookies: any, cookie: any) => {
   // refresh token that has been previously stored
