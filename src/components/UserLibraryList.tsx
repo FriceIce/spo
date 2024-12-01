@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Playlist } from "../definition";
 import useActivePath from "../hooks/useActivePath";
 import { useMediaQuery } from "../hooks/useMediaQueries";
 import useSpotify from "../hooks/useSpotify";
@@ -24,9 +24,13 @@ const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
     queryKey: ["user libraryList"],
     queryFn: async () =>
       await spotifyApi.getUserPlaylists(user?.id).then((playlist) => {
-        return playlist.items as unknown as Playlist[];
+        return playlist.items;
       }),
   });
+
+  useEffect(() => {
+    if (data) console.log(data);
+  }, [data]);
 
   if (guest && !isDesktop)
     return (
@@ -67,6 +71,7 @@ const UserLibraryList = ({ openSidebar }: { openSidebar: boolean }) => {
         </div>
         <ul className={`flex flex-col gap-3 ${pathname && "mx-2 pb-8"}`}>
           {data.map((playlist) => {
+            if (!playlist) return;
             return (
               <li key={playlist.id} title={playlist.name}>
                 <PlaylistCard

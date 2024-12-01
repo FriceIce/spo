@@ -1,17 +1,16 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { Dispatch } from "react";
-import { Album, Playlist, SearchTracks } from "../definition";
+import { Album, SearchTracks } from "../definition";
 import AlbumCard from "./AlbumCard";
 import ArtistCard from "./ArtistCard";
-import PlaylistCard from "./PlaylistCard";
 import TracksCard from "./TracksCard";
+import PlaylistCard from "./PlaylistCard";
 
 type ContentTyp = [
   SearchTracks[],
-  SearchTracks[],
-  Playlist[],
   Album[],
-  SpotifyApi.ArtistObjectFull[]
+  SpotifyApi.ArtistObjectFull[],
+  SpotifyApi.PlaylistObjectSimplified[]
 ];
 
 const ShowMoreContent = ({
@@ -19,7 +18,6 @@ const ShowMoreContent = ({
   title,
   type,
   setShowMore,
-  recommendations,
 }: {
   contentType: ContentTyp;
   title: string;
@@ -29,7 +27,6 @@ const ShowMoreContent = ({
       "track" | "playlist" | "album" | "artist" | "recommendations" | null
     >
   >;
-  recommendations: SearchTracks[];
 }) => {
   const isRecentlyPlayed =
     type === "track" ? 20 : contentType.flat().length - 1;
@@ -46,19 +43,23 @@ const ShowMoreContent = ({
         <h1 className="text-lg lg:text-5xl font-bold">{title}</h1>
       </div>
 
-      {type !== "recommendations" ? (
+      {
         <ul className="card-layout mx-2 gap-[1px]">
           {contentType
             .flat()
             .slice(0, isRecentlyPlayed)
             .map((card, index) => {
+              if (!card) return;
               const arrayOfTracks =
                 card.type === "track" &&
-                contentType.flat().filter((track) => track.type === "track");
+                contentType.flat().filter((track) => {
+                  if (!track) return;
+                  return track.type === "track";
+                });
 
               if (type === "track" && card.type === "track")
                 return (
-                  <li className="">
+                  <li key={card.id} className="">
                     <TracksCard
                       card={card}
                       arrayOfTracks={arrayOfTracks as SearchTracks[]}
@@ -68,53 +69,31 @@ const ShowMoreContent = ({
                   </li>
                 );
 
-              if (type === "playlist" && card.type === "playlist")
-                return (
-                  <li className="">
-                    <PlaylistCard
-                      playlistData={card}
-                      homepage
-                      sidemenu={false}
-                    />
-                  </li>
-                );
-
               if (type === "album" && card.type === "album")
                 return (
-                  <li className="">
+                  <li key={card.id} className="">
                     <AlbumCard albumData={card} isHomepage />
                   </li>
                 );
 
               if (type === "artist" && card.type === "artist")
                 return (
-                  <li className="">
+                  <li key={card.id} className="">
                     <ArtistCard card={card} homepage />
                   </li>
                 );
+
+              if (type === "playlist" && card.type === "playlist") {
+                return (
+                  <li key={card.id} className="">
+                    <PlaylistCard playlistData={card} homepage />
+                  </li>
+                );
+              }
             })
             .slice()}
         </ul>
-      ) : (
-        <ul className="card-layout mx-2 gap-[1px]">
-          {recommendations.flat().map((card, index) => {
-            const arrayOfTracks =
-              card.type === "track" &&
-              contentType.flat().filter((track) => track.type === "track");
-
-            return (
-              <li className="">
-                <TracksCard
-                  card={card}
-                  arrayOfTracks={arrayOfTracks as SearchTracks[]}
-                  index={index}
-                  homepage
-                />
-              </li>
-            );
-          })}
-        </ul>
-      )}
+      }
     </div>
   );
 };

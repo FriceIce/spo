@@ -15,7 +15,6 @@ import Header from "../../components/Header";
 
 const Home = () => {
   const { guest } = useSelector((state: RootState) => state.user);
-  const topArtists = useSelector((state: RootState) => state.home.topArtists);
   const [showMoreTitle, setShowMoreTitle] = useState<string>("");
   const [showMore, setShowMore] = useState<
     null | "artist" | "track" | "playlist" | "album" | "recommendations"
@@ -25,33 +24,24 @@ const Home = () => {
 
   const {
     recentlyPlayed,
-    featuredPlaylists,
     newReleases,
-    recommendations,
+    topArtists,
+    userLibrary,
     isLoading,
     isSuccess,
     imageLoaded,
   } = useFetchHome();
 
-  // The reason for including featuredPlaylist and newReleases in the if condition is that, when the user is signed in as a Guest, these are the only two variables that are not undefined.
-  if (isLoading && !imageLoaded && guest && !featuredPlaylists && !newReleases)
-    return <Spinner />;
+  if (isLoading && !imageLoaded && guest && !newReleases) return <Spinner />;
   if (isLoading && !guest) return <Spinner />; // This will run only when the user is signed in with Spotify.
 
   if (showMore && isDesktop)
     return (
       <ShowMoreContent
-        contentType={[
-          recentlyPlayed,
-          recommendations,
-          featuredPlaylists,
-          newReleases,
-          topArtists,
-        ]}
+        contentType={[recentlyPlayed, newReleases, topArtists, userLibrary]}
         title={showMoreTitle}
         type={showMore}
         setShowMore={setShowMore}
-        recommendations={recommendations}
       />
     );
 
@@ -63,64 +53,11 @@ const Home = () => {
     setShowMoreTitle(title);
   };
 
-  if (isSuccess && featuredPlaylists && newReleases && showMore === null)
+  if (isSuccess && newReleases && showMore === null)
     return (
       <>
         <Header />
         <div className="mt-2 space-y-8 lg:space-y-14 pb-[30px] lg:pb-[20px] overflow-hidden no-scrollbar">
-          <section
-            className={`flex-1 text-white space-y-2 max-w-[2200px] ${
-              featuredPlaylists.length === 0 && "hidden"
-            }`}
-          >
-            <div className="flex justify-between">
-              <h1
-                className={`${
-                  guest ? "text-xl" : "text-lg"
-                } lg:text-2xl font-bold pl-4`}
-              >
-                Music to keep an eye on
-              </h1>
-
-              {!guest && (
-                <button
-                  className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                  onClick={() => showMoreFunc("playlist", "Featured playlists")}
-                >
-                  Show more
-                </button>
-              )}
-            </div>
-
-            <ul
-              className={`${
-                isDesktop && !guest
-                  ? "slider-grid"
-                  : guest
-                  ? "card-layout"
-                  : "flex overflow-auto no-scrollbar"
-              }`}
-            >
-              {featuredPlaylists.map((playlist, index) => {
-                return (
-                  <li
-                    key={playlist.id}
-                    className={`flex-none ${
-                      guest && !isDesktop ? "w-full p-1" : "max-w-[150px]"
-                    } lg:max-h-none lg:max-w-none
-                  ${
-                    index === 0 && !guest
-                      ? "ml-2"
-                      : index === featuredPlaylists.length - 1 && "mr-2"
-                  }`}
-                  >
-                    <PlaylistCard playlistData={playlist} homepage />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-
           <section
             className={`flex-1 text-white space-y-2 max-w-[2200px] ${
               newReleases.length === 0 && "hidden"
@@ -164,7 +101,7 @@ const Home = () => {
                   ${
                     index === 0 && !guest
                       ? "ml-2"
-                      : index === featuredPlaylists.length - 1 && "mr-2"
+                      : index === newReleases.length - 1 && "mr-2"
                   }`}
                   >
                     <AlbumCard albumData={album} isHomepage />
@@ -176,56 +113,6 @@ const Home = () => {
 
           {!guest && (
             <>
-              <section
-                className={`flex-1 text-white space-y-2 max-w-[2200px] ${
-                  recommendations.length === 0 && "hidden"
-                }`}
-              >
-                <div className="flex justify-between">
-                  <h1 className="text-lg lg:text-2xl font-bold px-4">
-                    Recommendations
-                  </h1>
-
-                  <button
-                    className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
-                    onClick={() =>
-                      showMoreFunc("recommendations", "Recommendations")
-                    }
-                  >
-                    Show more
-                  </button>
-                </div>
-
-                <ul
-                  className={`${
-                    isDesktop
-                      ? "slider-grid"
-                      : "flex overflow-auto no-scrollbar"
-                  }`}
-                >
-                  {recommendations.map((track, index) => {
-                    return (
-                      <li
-                        key={index}
-                        className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none 
-                  ${
-                    index === 0
-                      ? "ml-2"
-                      : index === recommendations.length - 1 && "mr-2"
-                  }`}
-                      >
-                        <TracksCard
-                          card={track}
-                          homepage
-                          arrayOfTracks={recommendations}
-                          index={index}
-                        />
-                      </li>
-                    );
-                  })}
-                </ul>
-              </section>
-
               <section
                 className={`flex-1 text-white space-y-2 max-w-[2200px] ${
                   topArtists.length === 0 && "hidden"
@@ -315,6 +202,52 @@ const Home = () => {
                   })}
                 </ul>
               </section>
+
+              {userLibrary && (
+                <section
+                  className={`flex-1 text-white space-y-2 max-w-[2200px] ${
+                    userLibrary.length === 0 && "hidden"
+                  }`}
+                >
+                  <div className="flex justify-between">
+                    <h1 className="text-lg lg:text-2xl font-bold px-4">
+                      Your Library
+                    </h1>
+
+                    <button
+                      className="hidden text-spotify_gray hover:text-white cursor-pointer lg:block mr-7"
+                      onClick={() => showMoreFunc("playlist", "Your Library")}
+                    >
+                      Show more
+                    </button>
+                  </div>
+
+                  <ul
+                    className={`${
+                      isDesktop
+                        ? "slider-grid"
+                        : "flex overflow-auto no-scrollbar"
+                    }`}
+                  >
+                    {userLibrary.map((playlist, index) => {
+                      if (!playlist) return;
+                      return (
+                        <li
+                          key={index}
+                          className={`flex-none max-w-[150px] lg:max-h-none lg:max-w-none
+                  ${
+                    index === 0
+                      ? "ml-2"
+                      : index === userLibrary.length - 1 && "mr-2"
+                  }`}
+                        >
+                          <PlaylistCard playlistData={playlist} homepage />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              )}
             </>
           )}
         </div>

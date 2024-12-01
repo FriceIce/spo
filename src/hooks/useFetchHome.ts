@@ -1,28 +1,29 @@
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Album, Playlist, SearchTracks } from "../definition";
+import { useSelector } from "react-redux";
+import { Album, SearchTracks } from "../definition";
+import { RootState } from "../redux/store";
 import useImagePreloader from "./useImagePreloader";
 import useSpotify from "./useSpotify";
 
 const useFetchHome = () => {
+  const user = useSelector((state: RootState) => state.user.user);
   const [imgUrls, setImgUrls] = useState<string[]>([]);
-  const dispatch = useDispatch();
   const { spotifyApi } = useSpotify();
   const imageLoaded = useImagePreloader(imgUrls);
 
   // Checking for cached items for faster upload time.
   const queryClient = useQueryClient();
   const recent = queryClient.getQueryData(["Recently played"]);
-  const feature = queryClient.getQueryData([
-    "Featured playlists",
+  const userLib = queryClient.getQueryData([
+    "User library",
   ]) as SpotifyApi.PlaylistObjectSimplified[];
   const newFeat = queryClient.getQueryData([
     "New releases",
   ]) as SpotifyApi.AlbumObjectSimplified[];
-  const recom = queryClient.getQueryData([
-    "Recommendations",
-  ]) as unknown as SpotifyApi.TrackObjectSimplified[];
+  const topUserArtists = queryClient.getQueryData([
+    "Top artists",
+  ]) as unknown as SpotifyApi.ArtistObjectFull[];
 
   const queries = useQueries({
     queries: [
@@ -42,17 +43,6 @@ const useFetchHome = () => {
           }),
       },
       {
-        enabled: !feature,
-        initialData: feature,
-        queryKey: ["Featured playlists"],
-        queryFn: async () =>
-          new Promise((resolve) => {
-            spotifyApi.getFeaturedPlaylists({ limit: 25 }).then((item) => {
-              resolve(item.playlists.items);
-            });
-          }),
-      },
-      {
         enabled: !newFeat,
         initialData: newFeat,
         queryKey: ["New releases"],
@@ -64,62 +54,46 @@ const useFetchHome = () => {
           }),
       },
       {
-        enabled: !recom,
-        initialData: recom,
-        queryKey: ["Recommendations"],
+        enabled: !topUserArtists,
+        initialData: topUserArtists,
+        queryKey: ["Top Artists"],
         queryFn: async () =>
           spotifyApi
             .getMyTopArtists({ time_range: "short_term" })
             .then((results) => {
               return results.items;
-            })
-            .then((artistData) => {
-              const genres = artistData.map((artist) => artist.genres); //output - string[][]
-              const seed_genres = genres
-                .flat()
-                .filter((genre, index, self) => self.indexOf(genre) === index);
-              const formattedMusicGenres = seed_genres
-                .slice(0, 5)
-                .join(",")
-                .replace(/(\b\s\b)/g, "-");
-
-              return spotifyApi
-                .getRecommendations({
-                  seed_genres: formattedMusicGenres,
-                })
-                .then((results) => {
-                  dispatch({ type: "home/setTopArtists", payload: artistData });
-                  return results.tracks;
-                });
             }),
+      },
+      {
+        enabled: !userLib,
+        initialData: userLib,
+        queryKey: ["user libraryList"],
+        queryFn: async () =>
+          await spotifyApi.getUserPlaylists(user?.id).then((playlist) => {
+            return playlist.items;
+          }),
       },
     ],
   });
 
   const recentlyPlayed = queries[0].data as SearchTracks[];
-  const featuredPlaylists = queries[1].data as Playlist[];
-  const newReleases = queries[2].data as Album[];
-  const recommendations = queries[3].data as unknown as SearchTracks[];
+  const newReleases = queries[1].data as Album[];
+  const topArtists = queries[2].data;
+  const userLibrary = queries[3].data;
 
   useEffect(() => {
-    if (recentlyPlayed && recommendations) {
+    if (recentlyPlayed) {
       const recentUrls = recentlyPlayed.flatMap((track) =>
         track.album.images.map((img) => img.url)
       );
-      const recomUrls = recommendations.flatMap((track) =>
-        track.album.images.map((img) => img.url)
-      );
-      setImgUrls((prev) => [...prev, ...recentUrls, ...recomUrls]);
+      setImgUrls((prev) => [...prev, ...recentUrls]);
     }
 
-    if (featuredPlaylists && newReleases) {
-      const featUrls = featuredPlaylists.flatMap((playlist) =>
-        playlist.images.map((img) => img.url)
-      );
+    if (newReleases) {
       const newRelUrls = newReleases.flatMap((album) =>
         album.images.map((img) => img.url)
       );
-      setImgUrls((prev) => [...prev, ...featUrls, ...newRelUrls]);
+      setImgUrls((prev) => [...prev, ...newRelUrls]);
     }
   }, []);
 
@@ -129,9 +103,9 @@ const useFetchHome = () => {
 
   return {
     recentlyPlayed,
-    featuredPlaylists,
     newReleases,
-    recommendations,
+    topArtists,
+    userLibrary,
     isLoading,
     isSuccess,
     imageLoaded,
