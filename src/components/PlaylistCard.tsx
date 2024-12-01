@@ -88,7 +88,7 @@ const PlaylistCard = ({
           <p
             className={`text-white w-full truncate font-semibold text-sm lg:text-wrap lg:line-clamp-2
             ${homepage && "line-clamp-2 text-wrap"} ${
-              pathnameIsArtist && "line-clamp-2"
+              pathnameIsArtist && "line-clamp-2 text-wrap"
             }`}
           >
             {playlistData.name}

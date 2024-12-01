@@ -333,22 +333,14 @@ const searchAll = async (
     .searchPlaylists(input, { limit: desktop ? 10 : 5, market: "es" })
     .then(
       function (data) {
-        const spotifyPlaylists: SpotifyApi.PlaylistObjectSimplified[] = [];
-
-        const playlistWithoutSpotify = data.playlists.items
-          .map((playlistItem) => {
-            if (
-              playlistItem.owner.display_name?.toLocaleLowerCase() === "spotify"
-            )
-              spotifyPlaylists.push(playlistItem);
-            return playlistItem;
-          })
-          .filter(
-            (playlistItem: any) =>
-              playlistItem.owner.display_name?.toLocaleLowerCase() !== "spotify"
+        const playlists = data.playlists.items.filter((playlistItem: any) => {
+          if (!playlistItem) return;
+          return (
+            playlistItem.owner.display_name?.toLocaleLowerCase() !== "spotify"
           );
+        });
 
-        const sortedList = [...spotifyPlaylists, ...playlistWithoutSpotify];
+        const sortedList = playlists;
         // console.log("Search Playlist", sortedList);
         return [...sortedList];
       },

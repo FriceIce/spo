@@ -14,9 +14,6 @@ const useFetchArtist = (id: string) => {
   const artistAlbums = queryClient.getQueryData([
     "ArtistAlbums-" + id,
   ]) as SpotifyApi.AlbumObjectSimplified[];
-  const relArtists = queryClient.getQueryData([
-    "ArtistRelatedArtists-" + id,
-  ]) as SpotifyApi.ArtistObjectFull[];
   const artistRelPlaylists = queryClient.getQueryData([
     "ArtistRelatedPlaylists-" + id,
   ]) as SpotifyApi.PlaylistObjectSimplified[];
@@ -53,15 +50,6 @@ const useFetchArtist = (id: string) => {
             }),
       },
       {
-        enabled: !relArtists,
-        initialData: relArtists,
-        queryKey: ["ArtistRelatedArtists-" + id],
-        queryFn: async () =>
-          spotifyApi.getArtistRelatedArtists(id ?? "").then((result) => {
-            return result.artists;
-          }),
-      },
-      {
         enabled: !artistRelPlaylists,
         initialData: artistRelPlaylists,
         queryKey: ["ArtistRelatedPlaylists-" + id],
@@ -80,12 +68,13 @@ const useFetchArtist = (id: string) => {
                   limit: 10,
                 })
                 .then((result) => {
-                  const owner = "spotify";
-                  const onlySpotifyPlaylists = result.playlists.items.filter(
-                    (playlist) =>
-                      playlist.owner.display_name?.toLocaleLowerCase() === owner
-                  );
-                  return onlySpotifyPlaylists;
+                  return result.playlists.items.filter((playlist) => playlist);
+                  // const owner = "spotify";
+                  // const onlySpotifyPlaylists = result.playlists.items.filter(
+                  //   (playlist) =>
+                  //     playlist.owner.display_name?.toLocaleLowerCase() === owner
+                  // );
+                  // return onlySpotifyPlaylists;
                 });
             }),
       },
@@ -95,8 +84,7 @@ const useFetchArtist = (id: string) => {
   const artist = queries[0].data as SpotifyApi.SingleArtistResponse;
   const topTracks = queries[1].data as SpotifyApi.TrackObjectFull[];
   const albums = queries[2].data as SpotifyApi.AlbumObjectSimplified[];
-  const relatedArtists = queries[3].data as SpotifyApi.ArtistObjectFull[];
-  const artistRelatedPlaylists = queries[4]
+  const artistRelatedPlaylists = queries[3]
     .data as SpotifyApi.PlaylistObjectSimplified[];
 
   const isLoading = queries.find((query) => query.isLoading);
@@ -107,7 +95,6 @@ const useFetchArtist = (id: string) => {
     artist,
     topTracks,
     albums,
-    relatedArtists,
     artistRelatedPlaylists,
     isLoading,
     isSuccess,

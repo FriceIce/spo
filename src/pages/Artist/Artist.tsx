@@ -12,7 +12,6 @@ import useSpotify from "../../hooks/useSpotify";
 
 // components
 import AlbumCard from "../../components/AlbumCard";
-import ArtistCard from "../../components/ArtistCard";
 import GoBackArrow from "../../components/GoBackArrow";
 import PlaylistCard from "../../components/PlaylistCard";
 import MusicBars from "../../components/Spinner/MusicBars/MusicBars";
@@ -54,7 +53,6 @@ const Artist = () => {
     artist,
     topTracks,
     albums,
-    relatedArtists,
     artistRelatedPlaylists,
     isLoading,
     isSuccess,
@@ -224,113 +222,82 @@ const Artist = () => {
               </ul>
             </div>
           </section>
-          <section className="mx-4 space-y-3">
-            <div className="flex justify-between">
-              <h2 className="lg:ml-4 font-extrabold text-lg">Albums</h2>
+          {albums.length !== 0 && (
+            <section className="mx-4 space-y-3">
+              <div className="flex justify-between">
+                <h2 className="lg:ml-4 font-extrabold text-lg">Albums</h2>
 
-              {showMore.albums && (
-                <button className="hidden lg:block text-spotify_gray font-semibold mr-4 outline-none hover:text-white">
-                  Show more
-                </button>
-              )}
-            </div>
+                {showMore.albums && (
+                  <button className="hidden lg:block text-spotify_gray font-semibold mr-4 outline-none hover:text-white">
+                    Show more
+                  </button>
+                )}
+              </div>
 
-            <ul
-              id="albums"
-              className={`${isDesktop ? "slider-grid" : "flex flex-col gap-3"}`}
-            >
-              {albums.slice(0, howManyAlbums).map((album) => {
-                return (
-                  <li key={album.id}>
-                    <AlbumCard albumData={album} />
-                  </li>
-                );
-              })}
-            </ul>
-
-            {!isDesktop && (
-              <button
-                className=" bg-spotify_green text-black text-xs font-bold shadow py-[6px] px-[8px] rounded-md w-fit cursor-pointer outline-none"
-                onClick={showMoreAlbums}
+              <ul
+                id="albums"
+                className={`${
+                  isDesktop ? "slider-grid" : "flex flex-col gap-3"
+                }`}
               >
-                {howManyAlbums === 4 ? "Show more" : "Show less"}
-              </button>
-            )}
-          </section>
-          <section className="lg:mx-4 space-y-4">
-            <div className="flex justify-between">
-              <h2 className="font-extrabold text-lg pl-5">
-                With {artist.name}
-              </h2>
+                {albums.slice(0, howManyAlbums).map((album) => {
+                  return (
+                    <li key={album.id}>
+                      <AlbumCard albumData={album} />
+                    </li>
+                  );
+                })}
+              </ul>
 
-              {showMore.playlists && (
-                <button className="hidden lg:block text-spotify_gray font-semibold mr-4 outline-none hover:text-white">
-                  Show more
+              {!isDesktop && (
+                <button
+                  className=" bg-spotify_green text-black text-xs font-bold shadow py-[6px] px-[8px] rounded-md w-fit cursor-pointer outline-none"
+                  onClick={showMoreAlbums}
+                >
+                  {howManyAlbums === 4 ? "Show more" : "Show less"}
                 </button>
               )}
-            </div>
-            <ul
-              id="playlists"
-              className={`overflow-x-auto overflow-y-hidden no-scrollbar
-            ${isDesktop ? "slider-grid" : "flex gap-3"}`}
-            >
-              {artistRelatedPlaylists.map((playlist, index) => {
-                return (
-                  <li
-                    key={playlist.id}
-                    className={`flex-none w-[140px] lg:w-auto
-                  ${index === 0 && "ml-5 lg:ml-0"} ${
-                      index === artistRelatedPlaylists.length - 1 &&
-                      "mr-2 lg:mr-none"
-                    }`}
-                  >
-                    <PlaylistCard playlistData={playlist} />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-          <section className="space-y-4 lg:mx-2">
-            <div className="flex justify-between">
-              <h2 className="font-extrabold text-lg pl-5">Fans also like</h2>
+            </section>
+          )}
+          {artistRelatedPlaylists.length !== 0 && (
+            <section className="lg:mx-4 space-y-4">
+              <div className="flex justify-between">
+                <h2 className="font-extrabold text-lg pl-5">
+                  With {artist.name}
+                </h2>
 
-              {showMore.artists && (
-                <button className="hidden lg:block text-spotify_gray font-semibold mr-4 outline-none hover:text-white">
-                  Show more
-                </button>
-              )}
-            </div>
-            <ul
-              id="artists"
-              className={`overflow-auto no-scrollbar
-                ${isDesktop ? "slider-grid" : "flex gap-3 "}`}
-            >
-              {relatedArtists.map((artist, index) => {
-                return (
-                  <li
-                    key={artist.id}
-                    className={`flex-none w-[150px] lg:w-auto
-                  ${index === 0 && "ml-5 lg:ml-0"} ${
-                      index === relatedArtists.length - 1 && "mr-2"
-                    }`}
-                  >
-                    <ArtistCard card={artist} />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+                {showMore.playlists && (
+                  <button className="hidden lg:block text-spotify_gray font-semibold mr-4 outline-none hover:text-white">
+                    Show more
+                  </button>
+                )}
+              </div>
+              <ul
+                id="playlists"
+                className={`overflow-x-auto overflow-y-hidden no-scrollbar
+              ${isDesktop ? "slider-grid" : "flex gap-3"}`}
+              >
+                {artistRelatedPlaylists.map((playlist, index) => {
+                  if (!playlist) return;
+                  return (
+                    <li
+                      key={playlist.id}
+                      className={`flex-none w-[140px] lg:w-auto
+                    ${index === 0 && "ml-5 lg:ml-0"} ${
+                        index === artistRelatedPlaylists.length - 1 &&
+                        "mr-2 lg:mr-none"
+                      }`}
+                    >
+                      <PlaylistCard playlistData={playlist} />
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
         </div>
       </>
     );
 };
-
-/* 
-  ENDPOINTS I NEED TO CREATE THIS PAGE:
-  [1] Get artist - Hero image
-  [2] Get Artist's Top Tracks  
-  [3] Get artist's albums
-  [4] Get artist related artists 
-*/
 
 export default Artist;
