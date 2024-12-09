@@ -28,7 +28,7 @@ The versions listed below are the ones I'm using. It may also work with older ve
 Clone this repo:
 
 ```bash
-git clone https://github.com/FriceIce/spotify-web.git
+git clone https://github.com/{your-username}/spotify-web.git
 ```
 
 Install dependencies:
