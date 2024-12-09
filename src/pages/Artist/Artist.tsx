@@ -92,7 +92,7 @@ const Artist = () => {
 
         <div className="space-y-10 pb-4 max-w-[1500px] mx-auto">
           <div
-            className={`relative h-[325px] sm:h-[625px] md:h-[725px] lg:h-[425px] flex items-end`}
+            className={`relative h-[325px] sm:h-[425px] md:h-[500px] lg:h-[425px] flex items-end`}
           >
             <img
               crossOrigin="anonymous"
